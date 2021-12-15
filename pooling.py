@@ -19,9 +19,9 @@ if __name__ == "__main__":
    print("Printing a: "+str(a))
    b = linehexdump(packets[0], onlyhex=1, dump=True)
    print("Printing b: "+str(b))
-#   for i in range(len(packets)):
+   for i in range(len(packets)):
 #    print("passing: "+str(hexdump(packets[i])))
-#    cmd = "python3 packetVision.py '"+str(hexdump(packets[i]))+"'"
+    cmd = "python3 packetVision.py '"+str(linehexdump(packets[0], onlyhex=1, dump=True))+"'"
 #    print("Command to run: "+str(cmd))
-#    os.system(cmd)
-#   print("End of pooling")
+    os.system(cmd)
+   print("End of pooling")
