@@ -14,3 +14,4 @@
 
 ### How to Run
 
+# ```sudo python3 pooling.py 1 1 eth0```
