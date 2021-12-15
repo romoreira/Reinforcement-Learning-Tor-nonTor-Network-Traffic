@@ -9,6 +9,8 @@
 * ```sudo apt-get install python3-dev python3-pip```
 * ```sudo pip3 install --pre scapy[complete]```
 * ```sudo pip3 install numpy```
+* ```sudo pip3 install pandas```
+* ```sudo pip3 install Pillow```
 
 ### How to Run
 
