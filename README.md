@@ -20,7 +20,5 @@
 
         { where first parameter refers to amount of packet capture, second refers to time of capture and last one refers to interface to be monitored }
 
-
-
-
+![Alt text][id]
 [id]: https://octodex.github.com/images/dojocat.jpg  "The Dojocat"
