@@ -3,8 +3,7 @@ import numpy as np
 import pandas as pd
 from PIL import Image
 
-def create_image(raw_packet, time_stamp):
-    #print("Raw Recebido: "+str(raw_packet))
+def create_image(raw_packet, time_stamp, pkt_number):
     l = raw_packet.split(' ')
     j = 0
     packet_hex = []
@@ -86,7 +85,7 @@ def create_image(raw_packet, time_stamp):
     #img = Image.fromarray(arr.astype('uint8'), 'RGB')
 
 #    print("\nPronto pra salvar: " + str(n))
-    img.save(str(time_stamp)+"_sample.png")
+    img.save(str(time_stamp)+"_"+str(pkt_number)+"_sample.png")
     return
 
 
@@ -112,4 +111,4 @@ def create_image(raw_packet, time_stamp):
 #            print(' '.join(lst))
 #    print("List: "+str(lst))
 if __name__ == "__main__":
-    create_image(sys.argv[1], sys.argv[2])
+    create_image(sys.argv[1], sys.argv[2], sys.argv[3])

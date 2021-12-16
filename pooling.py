@@ -6,18 +6,15 @@ from scapy.all import raw
 from scapy.all import hexdump
 import calendar
 import time
-
+0
 def runner(pkt_amount, duration, interface):
-    for i in range(pkt_amount):
-        cmd = 'sudo rm /tmp/output_'+str(i)+'.pcap'
-        os.system(cmd)
-        cmd = 'sudo dumpcap -i '+str(interface)+' -c '+str(pkt_amount)+' -a duration:'+str(duration)+ ' -w /tmp/output_'+str(i)+'.pcap'
-        os.system(cmd)
+    cmd = 'sudo dumpcap -i '+str(interface)+' -c '+str(pkt_amount)+' -a duration:'+str(duration)+ ' -w /tmp/output.pcap'
+    os.system(cmd)
 
 if __name__ == "__main__":
    runner(int(sys.argv[1]), sys.argv[2], sys.argv[3])
    for i in range(int(sys.argv[1])):
-       packets = rdpcap('/tmp/output_'+str(i)+'.pcap')
+       packets = rdpcap('/tmp/output.pcap')
 
 #   a = hexdump(packets[0], dump=True)
 #   print("Printing a: "+str(a))
@@ -25,7 +22,9 @@ if __name__ == "__main__":
 #   print("Printing b: "+str(b))
    for i in range(len(packets)):
 #    print("passing: "+str(hexdump(packets[i])))
-    cmd = "python3 packetVision.py '"+str(linehexdump(packets[i], onlyhex=1, dump=True))+"' "+str(calendar.timegm(time.gmtime()))
+    cmd = "python3 packetVision.py '"+str(linehexdump(packets[i], onlyhex=1, dump=True))+"' "+str(calendar.timegm(time.gmtime()))+" "+str(i)
 #    print("Command to run: "+str(cmd))
     os.system(cmd)
+   cmd = 'sudo rm /tmp/output.pcap'
+   os.system(cmd)
    print("End of pooling")

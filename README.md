@@ -14,4 +14,4 @@
 
 ### How to Run
 
-# ```sudo python3 pooling.py 1 1 eth0```
+## ```sudo python3 pooling.py 1 1 eth0``` where first parameter refers to amount of packet capture, second refers to time of capture and last one refers to interface to be monitored
