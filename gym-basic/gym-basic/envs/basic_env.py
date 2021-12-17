@@ -11,6 +11,7 @@ import numpy as np
 from stable_baselines.common.policies import MlpPolicy
 from stable_baselines.common.vec_env import DummyVecEnv
 from stable_baselines import PPO2
+import matplotlib.pyplot as plt
 
 class BasicEnv(gym.Env):
 
@@ -35,7 +36,14 @@ class BasicEnv(gym.Env):
             return state
 
     def render(slef, mode='human'):
-            pass
+            # Render the environment to the screen
+            im = <obtain image from env>        
+        
+            if mode == 'human':    
+                plt.imshow(np.asarray(im))
+                plt.axis('off')
+            elif mode == 'rgb_array':
+                return np.asarray(im)
 
 #env = gym.make("gym_basic:basic-v0")
 env = BasicEnv()
