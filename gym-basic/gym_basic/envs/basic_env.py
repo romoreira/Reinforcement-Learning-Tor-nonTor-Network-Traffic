@@ -17,25 +17,29 @@ import matplotlib.pyplot as plt
 class BasicEnv(gym.Env):
 
     def __init__(self):
-        high = np.array([1])
-        self.action_space = gym.spaces.Box(-high, high, dtype=np.float32)
-        self.observation_space = gym.spaces.Discrete(100)
-        self.state = 0
+        self.pooling_max = 100
+        self.pooling_min = 1
+        self.classification_acc_max = 100
+        self.classification_acc_min = 0
+        
+        low = np.array([self.pooling_min, self.classification_acc_min], dtype=np.float32,)
+        high = np.array([self.pooling_max, self.classification_acc_max], dtype=np.float32,)
+
+        self.action_space = gym.spaces.Discrete(2)
+        self.observation_space = gym.spaces.Box(low, high, dtype=np.float32)
+        
+        self.state = None
 
     def step(self, action):
-        done = False
+        
         if action == 1:
             self.state = self.state + 1
             reward = 1
-            if self.state == 5:
-                done = True
         elif action == 0:
             self.state = self.state + 0
             reward = 0.5
-        else:
-            self.state = self.state - 1
-            reward = -1
-
+        
+        done = True
 
         info = {}
         return self.state, reward, done, info
