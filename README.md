@@ -56,3 +56,5 @@
     python3 basic_env.py
     sudo apt-get install cmake
     pip3 install opencv-python
+    sudo apt install libopenmpi-dev
+    pip3 install ale-py
