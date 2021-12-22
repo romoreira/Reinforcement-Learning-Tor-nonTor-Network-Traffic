@@ -54,3 +54,5 @@
     pip3 install tensorflow==1.15.0
     sudo apt-get install python3-opencv
     python3 basic_env.py
+    sudo apt-get install cmake
+    pip3 install opencv-python
