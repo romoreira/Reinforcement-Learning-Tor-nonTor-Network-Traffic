@@ -1,6 +1,9 @@
 """
 DQN in PyTorch
 https://gym.openai.com/evaluations/eval_onwKGm96QkO9tJwdX7L0Gw/
+
+python3 teste.py --gamma 0.99 --env "gym_basic:basic-v0" --n-episode 5 --batch-size 64 --hidden-dim 12 --capacity 50000 --max-episode 50 --min-eps 0.01
+
 """
 import argparse
 import torch
@@ -189,7 +192,7 @@ class Agent(object):
         """
         print("States into get_Q: "+str(states))
         #states = self._to_variable(states.reshape(-1, self.input_dim))
-        states = self._to_variable(states.reshape(1, self.input_dim))
+        states = self._to_variable(states.reshape(-1, self.input_dim))
         self.dqn.train(mode=False)
         return self.dqn(states)
 
