@@ -12,40 +12,38 @@ from stable_baselines.common.policies import MlpPolicy
 from stable_baselines.common.vec_env import DummyVecEnv
 from stable_baselines import PPO2
 import matplotlib.pyplot as plt
-
+import random
 
 class BasicEnv(gym.Env):
 
     def __init__(self):
-        self.pooling_max = 100
-        self.pooling_min = 1
-        self.classification_acc_max = 100
-        self.classification_acc_min = 0
-        
-        low = np.array([self.pooling_min, self.classification_acc_min], dtype=np.float32,)
-        high = np.array([self.pooling_max, self.classification_acc_max], dtype=np.float32,)
-
-        self.action_space = gym.spaces.Discrete(2)
-        self.observation_space = gym.spaces.Box(low, high, dtype=np.float32)
-        
-        self.state = None
-
+        self.action_space = gym.spaces.Discrete(3)
+        self.observation_space = gym.spaces.Box(low=np.array([0]), high=np.array([100]))
+        self.state = 38 + random.randint(-3,3)
+        self.shower_lenght = 60
     def step(self, action):
-        
-        if action == 1:
-            self.state = self.state + 1
+        self.state += action - 1
+        self.shower_lenght -= 1
+
+        if self.state >= 37 and self.state <= 39:
             reward = 1
-        elif action == 0:
-            self.state = self.state + 0
-            reward = 0.5
-        
-        done = True
+        else:
+            reward = -1
+
+        if self.shower_lenght <= 0:
+            done = True
+        else:
+            done = False
+
+        #self.state += random.randint(-1, 1)
 
         info = {}
+
         return self.state, reward, done, info
 
     def reset(self):
-        self.state = 0
+        self.state = 38 + random.randint(-3,3)
+        self.shower_lenght = 60
         return self.state
 
     def render(slef, mode='human'):

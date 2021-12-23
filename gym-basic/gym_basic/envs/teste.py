@@ -176,11 +176,16 @@ class Agent(object):
             int: action index
         """
         if np.random.rand() < eps:
+            #print("Retornando np.random.rand()")
+            #print(str(np.random.choice(self.output_dim)))
             return np.random.choice(self.output_dim)
         else:
+            #print("Retornando argmax.numpy()")
             self.dqn.train(mode=False)
-            scores = self.get_Q(states)
+            #print("States: "+str(np.array([states])))
+            scores = self.get_Q(np.array([states]))
             _, argmax = torch.max(scores.data, 1)
+            #print(str(argmax.numpy()))
             return int(argmax.numpy())
 
     def get_Q(self, states: np.ndarray) -> torch.FloatTensor:
@@ -190,7 +195,7 @@ class Agent(object):
         Returns:
             torch.FloatTensor: 2-D Tensor of shape (n, output_dim)
         """
-        print("States into get_Q: "+str(states))
+        #print("States into get_Q: "+str(states))
         #states = self._to_variable(states.reshape(-1, self.input_dim))
         states = self._to_variable(states.reshape(-1, self.input_dim))
         self.dqn.train(mode=False)
@@ -319,7 +324,7 @@ def main():
     """
     try:
         env = gym.make(FLAGS.env)
-        #env = gym.wrappers.Monitor(env, directory="monitors", force=True)
+        env = gym.wrappers.Monitor(env, directory="monitors", force=True)
         rewards = deque(maxlen=100)
         input_dim, output_dim = get_env_dim(env)
         agent = Agent(input_dim, output_dim, FLAGS.hidden_dim)
