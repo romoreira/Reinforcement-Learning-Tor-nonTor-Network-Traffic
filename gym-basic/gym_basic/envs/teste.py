@@ -2,7 +2,7 @@
 DQN in PyTorch
 https://gym.openai.com/evaluations/eval_onwKGm96QkO9tJwdX7L0Gw/
 
-python3 teste.py --gamma 0.99 --env "gym_basic:basic-v0" --n-episode 5 --batch-size 64 --hidden-dim 12 --capacity 50000 --max-episode 50 --min-eps 0.01
+python3 teste.py --gamma 0.99 --env "gym_basic:basic-v0" --n-episode 200 --batch-size 64 --hidden-dim 12 --capacity 50000 --max-episode 50 --min-eps 0.01
 
 """
 import argparse
@@ -14,7 +14,14 @@ import gym
 from collections import namedtuple
 from collections import deque
 from typing import List, Tuple
+import matplotlib
+import matplotlib.pyplot as plt
 
+# set up matplotlib
+is_ipython = 'inline' in matplotlib.get_backend()
+if is_ipython:
+    from IPython import display
+episode_durations = []
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--gamma",
@@ -177,7 +184,7 @@ class Agent(object):
         """
         if np.random.rand() < eps:
             #print("Retornando np.random.rand()")
-            #print(str(np.random.choice(self.output_dim)))
+            #print(str("np.random.rand() < eps: "+str(np.random.choice(self.output_dim))))
             return np.random.choice(self.output_dim)
         else:
             #print("Retornando argmax.numpy()")
@@ -185,7 +192,7 @@ class Agent(object):
             #print("States: "+str(np.array([states])))
             scores = self.get_Q(np.array([states]))
             _, argmax = torch.max(scores.data, 1)
-            #print(str(argmax.numpy()))
+            #print("Action returned by get_action - get_Q "+str(argmax.numpy()))
             return int(argmax.numpy())
 
     def get_Q(self, states: np.ndarray) -> torch.FloatTensor:
@@ -239,7 +246,7 @@ def train_helper(agent: Agent, minibatch: List[Transition], gamma: float) -> flo
     Q_target = Q_predict.clone().data.numpy()
     Q_target[np.arange(len(Q_target)), actions] = rewards + gamma * np.max(agent.get_Q(next_states).data.numpy(), axis=1) * ~done
     Q_target = agent._to_variable(Q_target)
-
+    #print("q_predict: "+str(Q_predict)+" Q_target: "+str(Q_target))
     return agent.train(Q_predict, Q_target)
 
 
@@ -265,6 +272,7 @@ def play_episode(env: gym.Env,
     while not done:
 
         a = agent.get_action(s, eps)
+        #print("Play Episode retorno de agent.get_action(): "+str(a))
         s2, r, done, info = env.step(a)
 
         total_reward += r
@@ -273,14 +281,16 @@ def play_episode(env: gym.Env,
             r = -1
         replay_memory.push(s, a, r, s2, done)
 
+        #print("Cheking if replay_memory > batch_size: "+str(len(replay_memory))+ " > "+str(batch_size))
         if len(replay_memory) > batch_size:
-
+            #print("train_helper calling")
             minibatch = replay_memory.pop(batch_size)
-            train_helper(agent, minibatch, FLAGS.gamma)
+            loss = train_helper(agent, minibatch, FLAGS.gamma)
+            #print("LOSS: "+str(loss))
 
         s = s2
 
-    return total_reward
+    return total_reward, loss
 
 
 def get_env_dim(env: gym.Env) -> Tuple[int, int]:
@@ -324,27 +334,51 @@ def main():
     """
     try:
         env = gym.make(FLAGS.env)
-        env = gym.wrappers.Monitor(env, directory="monitors", force=True)
+#        env = gym.wrappers.Monitor(env, directory="monitors", force=True)
         rewards = deque(maxlen=100)
         input_dim, output_dim = get_env_dim(env)
         agent = Agent(input_dim, output_dim, FLAGS.hidden_dim)
         replay_memory = ReplayMemory(FLAGS.capacity)
 
+        loss_history = []
+        episodes = []
+        recompensas = []
+        
         for i in range(FLAGS.n_episode):
             eps = epsilon_annealing(i, FLAGS.max_episode, FLAGS.min_eps)
-            r = play_episode(env, agent, replay_memory, eps, FLAGS.batch_size)
+            r, loss = play_episode(env, agent, replay_memory, eps, FLAGS.batch_size)
             print("[Episode: {:5}] Reward: {:5} 𝜺-greedy: {:5.2f}".format(i + 1, r, eps))
 
             rewards.append(r)
+            loss_history.append(loss.item())
+            episodes.append(i)
+            recompensas.append(r)
 
             if len(rewards) == rewards.maxlen:
-
-                if np.mean(rewards) >= 200:
+                if np.mean(rewards) >= 55:
                     print("Game cleared in {} games with {}".format(i + 1, np.mean(rewards)))
                     break
+        
+        print("Rplay_memory: "+str(max(replay_memory.pop(1))))
     finally:
         env.close()
+   
+    print("Episodes number: "+str(len(episodes)))
+    print("Full loss List: "+str(len(loss_history)))
+    print("Rewards: "+str(len(rewards)))
 
+    plt.plot(episodes, loss_history, 'r', label='Training Loss')
+    plt.title('Training Loss and Reward')
+    plt.xlabel('Episodes')
+    plt.ylabel('Loss')
+    plt.savefig('train_loss.png')
+
+    plt.clf()
+
+    plt.plot(episodes, recompensas, 'b', label='Reward')
+    plt.xlabel('Episodes')
+    plt.ylabel('Rewards')
+    plt.savefig('train_rewards.png')
 
 if __name__ == '__main__':
     main()

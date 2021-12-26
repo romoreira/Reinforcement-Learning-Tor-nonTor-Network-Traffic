@@ -8,7 +8,8 @@ from torch import randint
 
 seed = 1432
 
-env = gym.make('gym_basic:basic-v0')
+env = gym.make('basic-v0')
+#env = gym.make('gym_basic:basic-v0')
 
 episode_count = 10
 rew_arr = []

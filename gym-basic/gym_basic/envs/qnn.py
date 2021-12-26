@@ -9,7 +9,7 @@ import numpy as np
 
 seed = 1432
 
-env = gym.make('gym_basic:basic-v0')
+env = gym.make("gym_basic:basic-v0")
 
 
 input_dim = env.observation_space.n
