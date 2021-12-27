@@ -143,6 +143,10 @@ class ReplayMemory(object):
             List[Transition]: Minibatch of `Transition`
         """
         return random.sample(self.memory, batch_size)
+    
+    def gather_all(self) -> List[Transition]:
+        """Returns all the items in buffer."""
+        return self.memory
 
     def __len__(self) -> int:
         """Returns the length """
