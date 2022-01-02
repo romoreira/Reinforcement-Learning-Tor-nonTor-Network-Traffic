@@ -16,16 +16,17 @@ def runner(pkt_amount, duration, interface):
     cmd = 'sudo dumpcap -i '+str(interface)+' -c '+str(pkt_amount)+' -a duration:'+str(duration)+ ' -w /tmp/output.pcap'
     os.system(cmd)
 
-def main(amount_capture, capture_time, interface_name):
-    runner(int(sys.argv[1]), sys.argv[2], sys.argv[3])
-    for i in range(int(sys.argv[1])):
+def main(pkt_amount, duration, interface_name):
+    current_network_status = 0
+    runner(int(pkt_amount), int(duration), interface_name)
+    for i in range(int(pkt_amount)):
         packets = rdpcap('/tmp/output.pcap')
 
     for i in range(len(packets)):
         cmd = "python3 packetVision.py '"+str(linehexdump(packets[i], onlyhex=1, dump=True))+"' "+str(calendar.timegm(time.gmtime()))+" "+str(i)
         os.system(cmd)
-        cmd = 'sudo rm /tmp/output.pcap'
-        os.system(cmd)
+    cmd = 'sudo rm /tmp/output.pcap'
+    os.system(cmd)
 
     print("End of pooling")
 

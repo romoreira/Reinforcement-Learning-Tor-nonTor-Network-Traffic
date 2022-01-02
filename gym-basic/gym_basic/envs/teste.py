@@ -191,7 +191,7 @@ class Agent(object):
             #print(str("np.random.rand() < eps: "+str(np.random.choice(self.output_dim))))
             return np.random.choice(self.output_dim)
         else:
-            #print("Retornando argmax.numpy()")
+            print("Retornando argmax.numpy()")
             self.dqn.train(mode=False)
             #print("States: "+str(np.array([states])))
             scores = self.get_Q(np.array([states]))
@@ -359,7 +359,7 @@ def main():
             recompensas.append(r)
 
             if len(rewards) == rewards.maxlen:
-                if np.mean(rewards) >= 55:
+                if np.mean(rewards) >= 9:
                     print("Game cleared in {} games with {}".format(i + 1, np.mean(rewards)))
                     break
         
