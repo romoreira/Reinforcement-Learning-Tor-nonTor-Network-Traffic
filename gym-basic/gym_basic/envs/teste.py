@@ -371,6 +371,9 @@ def main():
     print("Full loss List: "+str(len(loss_history)))
     print("Rewards: "+str(len(rewards)))
 
+    transitions = replay_memory.gather_all()
+    print("Replay Memory: "+str(transitions[-100:]))
+
     plt.plot(episodes, loss_history, 'r', label='Training Loss')
     plt.title('Training Loss and Reward')
     plt.xlabel('Episodes')
