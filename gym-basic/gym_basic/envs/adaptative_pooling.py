@@ -70,7 +70,7 @@ class BasicEnv(gym.Env):
 
     def step(self, action):
         print("\nStep Action Required: "+str(action))
-        self.state = self.main(action, 3330, 'enp0s3')
+        self.state = self.main(1 if action == 0 else action, 3330, 'enp0s3')#1 if rando return 0, else action otherwise
         print("\nNew State after pooling: "+str(self.state))
         self.pooling_times -= 1
 
