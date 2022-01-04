@@ -358,8 +358,9 @@ def main():
             episodes.append(i)
             recompensas.append(r)
 
+            print("Media Rewards: "+str(np.mean(rewards)))
             if len(rewards) == rewards.maxlen:
-                if np.mean(rewards) >= 3:
+                if np.mean(rewards) >= 2.5:
                     print("Game cleared in {} games with {}".format(i + 1, np.mean(rewards)))
                     break
         
