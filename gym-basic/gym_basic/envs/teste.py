@@ -339,7 +339,7 @@ def main():
     try:
         env = gym.make(FLAGS.env)
 #        env = gym.wrappers.Monitor(env, directory="monitors", force=True)
-        rewards = deque(maxlen=100)
+        rewards = deque(maxlen=10)
         input_dim, output_dim = get_env_dim(env)
         agent = Agent(input_dim, output_dim, FLAGS.hidden_dim)
         replay_memory = ReplayMemory(FLAGS.capacity)
@@ -359,7 +359,7 @@ def main():
             recompensas.append(r)
 
             if len(rewards) == rewards.maxlen:
-                if np.mean(rewards) >= 9:
+                if np.mean(rewards) >= 3:
                     print("Game cleared in {} games with {}".format(i + 1, np.mean(rewards)))
                     break
         

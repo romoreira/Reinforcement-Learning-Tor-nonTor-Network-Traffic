@@ -76,7 +76,7 @@ class BasicEnv(gym.Env):
 
         print("pooling times: "+str(self.pooling_times))
 
-        if self.state >= 96:#If IoT sampling is bigger than 90% that is correct
+        if self.state >= 93:#If IoT sampling is bigger than 90% that is correct
             reward = 1
         else:
             reward = -1
