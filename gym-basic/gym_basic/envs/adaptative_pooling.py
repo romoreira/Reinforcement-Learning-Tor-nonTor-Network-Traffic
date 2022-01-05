@@ -242,8 +242,7 @@ class BasicEnv(gym.Env):
         model_name = "squeezenet"
         self.model, input_size = self.initialize_model(model_name, 7, True, True)
 
-        checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'),
-                                map_location='cpu')
+        checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'))
         self.model.load_state_dict(checkpoint)
         self.model.eval()
 
