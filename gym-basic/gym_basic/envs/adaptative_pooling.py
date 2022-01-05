@@ -42,6 +42,8 @@ from csv import writer
 import threading
 import time
 
+from numba_functions import convert_packet_to_int
+from numba_functions import expand_pixels_image
 
 SEED = 1234
 torch.manual_seed(SEED)
@@ -70,7 +72,7 @@ class BasicEnv(gym.Env):
 
     def step(self, action):
         print("\nStep Action Required: "+str(action))
-        self.state = self.main(1 if action == 0 else action, 3330, 'enp0s3')#1 if rando return 0, else action otherwise
+        self.state = self.main(1 if action == 0 else action, 3330, 'wlp3s0')#1 if rando return 0, else action otherwise
         print("\nNew State after pooling: "+str(self.state))
         self.pooling_times -= 1
 
@@ -103,6 +105,7 @@ class BasicEnv(gym.Env):
             plt.axis('off')
         elif mode == 'rgb_array':
             return np.asarray(im)
+
 
 
     def create_image(self, raw_packet, time_stamp, pkt_number):
@@ -147,26 +150,26 @@ class BasicEnv(gym.Env):
 
         # print(packet_hex)
 
+
+
+        #packet_hex = convert_packet_to_int(packet_hex)
         for i in range(len(packet_hex)):
             for j in range(8):
-                #            print(str(packet_hex[i][j]))
-                #            print("Conversao: "+str(int(packet_hex[i][j],16)))
-                # print("Subistituindo: "+str(packet_hex[i][j])+ " por : "+str(int(packet_hex[i][j],16)))
-                packet_hex[i][j] = int(packet_hex[i][j], 16)
+                 packet_hex[i][j] = int(packet_hex[i][j], 16)
 
-        # print(packet_hex)
+
 
         numeros = np.matrix(packet_hex)
         numeros = numeros.astype(int)
 
-        # print(numeros)
+
 
         dataFrame = pd.DataFrame(numeros)
         data = dataFrame.to_numpy()
 
         data = data.tolist()
-        # print(data[0][7])
 
+        #data = expand_pixels_image(packet_hex, data)
         for i in range(len(packet_hex)):
             for j in range(8):
                 data[i][j] = [data[i][j], data[i][j], data[i][j]]
@@ -184,7 +187,7 @@ class BasicEnv(gym.Env):
 
         #    print("\nPronto pra salvar: " + str(n))
         img.save(
-            "/home/rodrigo/adaptative-monitoring/tmp_pooling/" + str(time_stamp) + "_" + str(
+            "/home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/" + str(time_stamp) + "_" + str(
                 pkt_number) + "_sample.png")
         return
 
@@ -239,7 +242,7 @@ class BasicEnv(gym.Env):
         model_name = "squeezenet"
         self.model, input_size = self.initialize_model(model_name, 7, True, True)
 
-        checkpoint = torch.load(Path('/home/rodrigo/adaptative-monitoring/models_trained/squeezenet.pth'),
+        checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'),
                                 map_location='cpu')
         self.model.load_state_dict(checkpoint)
         self.model.eval()
@@ -268,7 +271,7 @@ class BasicEnv(gym.Env):
             transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
         ])
 
-        path = Path('/home/rodrigo/adaptative-monitoring/tmp_pooling/' + str(image_name))
+        path = Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/' + str(image_name))
 
         image = Image.open(path)
 
@@ -283,7 +286,7 @@ class BasicEnv(gym.Env):
         return know_classes[int(prediction.item())]
 
     def runner(self, pkt_amount, duration, interface):
-        cmd = 'sudo dumpcap -i ' + str(interface) + ' -c ' + str(pkt_amount) + ' -a duration:' + str(
+        cmd = 'dumpcap -i ' + str(interface) + ' -c ' + str(pkt_amount) + ' -a duration:' + str(
             duration) + ' -w /tmp/output.pcap'
         os.system(cmd)
 
@@ -300,16 +303,16 @@ class BasicEnv(gym.Env):
 
         print("End of pooling")
 
-        path, dirs, files = next(os.walk("/home/rodrigo/adaptative-monitoring/tmp_pooling/"))
+        path, dirs, files = next(os.walk("/home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/"))
         returned_value = ''
-        for x in os.listdir("/home/rodrigo/adaptative-monitoring/tmp_pooling/"):
+        for x in os.listdir("/home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/"):
             if x.endswith(".png"):
                 # cmd = 'python3 load_example.py '+str(x)
                 returned_value = self.cnn_predict(x)
                 if returned_value == 'iot':
                     current_network_status = current_network_status + 1
 
-        cmd = 'sudo rm /home/rodrigo/adaptative-monitoring/tmp_pooling/*.png'
+        cmd = 'sudo rm /home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/*.png'
         os.system(cmd)
 
         # print("IoT Traffic Percent on the Network: "+str("{0:.0f}%".format(current_network_status/len(files) * 100)))

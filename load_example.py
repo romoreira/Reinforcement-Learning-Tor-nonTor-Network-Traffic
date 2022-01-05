@@ -74,7 +74,7 @@ def cnn_start():
     model_name = "squeezenet"
     model, input_size = initialize_model(model_name, num_classes=7, feature_extract=True, use_pretrained=True)
 
-    checkpoint = torch.load(Path('/home/rodrigo/adaptative-monitoring/models_trained/squeezenet.pth'), map_location='cpu')
+    checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'))
     model.load_state_dict(checkpoint)
     model.eval()
 
@@ -102,7 +102,7 @@ def cnn_predict(image_name):
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
 
-    path = Path('/home/rodrigo/adaptative-monitoring/tmp_pooling/'+str(image_name))
+    path = Path('/home/rodrigo/PycharmProject/adaptative-monitoring/tmp_pooling/'+str(image_name))
 
     
     image = Image.open(path)
