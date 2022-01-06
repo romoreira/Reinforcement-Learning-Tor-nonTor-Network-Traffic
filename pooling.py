@@ -199,7 +199,7 @@ def cnn_start():
     model_name = "squeezenet"
     model, input_size = initialize_model(model_name, num_classes=7, feature_extract=True, use_pretrained=True)
 
-    checkpoint = torch.load(Path('/home/rodrigo/adaptative-monitoring/models_trained/squeezenet.pth'),
+    checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'),
                             map_location='cpu')
     model.load_state_dict(checkpoint)
     model.eval()
@@ -232,7 +232,7 @@ def cnn_predict(image_name):
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
 
-    path = Path('/home/rodrigo/adaptative-monitoring/tmp_pooling/' + str(image_name))
+    path = Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/' + str(image_name))
 
     image = Image.open(path)
 
@@ -246,9 +246,6 @@ def cnn_predict(image_name):
     # print("Prediction: "+str(know_classes[int(prediction.item())]))
     return know_classes[int(prediction.item())]
 
-
-if __name__ == '__main__':
-    print(cnn_predict(sys.argv[1]))
 
 
 def runner(pkt_amount, duration, interface):
@@ -283,21 +280,24 @@ def main(pkt_amount, duration, interface_name):
     return (current_network_status/len(files) * 100)
 
 if __name__ == "__main__":
-   runner(int(sys.argv[1]), sys.argv[2], sys.argv[3])
-   for i in range(int(sys.argv[1])):
-       packets = rdpcap('/tmp/output.pcap')
+   #runner(int(sys.argv[1]), sys.argv[2], sys.argv[3])
+   #for i in range(int(sys.argv[1])):
+   #packets = PcapReader('./IoT.pcap')
+   #    packets = rdpcap('./IoT.pcap')
 
-   for i in range(len(packets)):
-    cmd = "python3 packetVision.py '"+str(linehexdump(packets[i], onlyhex=1, dump=True))+"' "+str(calendar.timegm(time.gmtime()))+" "+str(i)
-    os.system(cmd)
-   cmd = 'sudo rm /tmp/output.pcap'
-   os.system(cmd)
+   #i = 0
+   #for packet in packets:
+   # cmd = "python3 packetVision.py '"+str(linehexdump(packet, onlyhex=1, dump=True))+"' "+str(calendar.timegm(time.gmtime()))+" "+str(i)
+   # os.system(cmd)
+   # i = i + 1
+   #cmd = 'sudo rm /tmp/output.pcap'
+   #os.system(cmd)
    print("End of pooling")
 
     
-   path, dirs, files = next(os.walk("/home/rodrigo/adaptative-monitoring/tmp_pooling/"))
+   path, dirs, files = next(os.walk("/home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/"))
    returned_value = ''
-   for x in os.listdir("/home/rodrigo/adaptative-monitoring/tmp_pooling/"):
+   for x in os.listdir("/home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/"):
        if x.endswith(".png"):
            #cmd = 'python3 load_example.py '+str(x)
            returned_value = cnn_predict(x)

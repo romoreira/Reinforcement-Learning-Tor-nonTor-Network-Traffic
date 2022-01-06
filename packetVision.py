@@ -85,7 +85,7 @@ def create_image(raw_packet, time_stamp, pkt_number):
     #img = Image.fromarray(arr.astype('uint8'), 'RGB')
 
 #    print("\nPronto pra salvar: " + str(n))
-    img.save("/home/rodrigo/adaptative-monitoring/tmp_pooling/"+str(time_stamp)+"_"+str(pkt_number)+"_sample.png")
+    img.save("/home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/"+str(time_stamp)+"_"+str(pkt_number)+"_sample.png")
     return
 
 

@@ -1,6 +1,10 @@
 '''
 Auhor: Rodrigo Moreira rodrigo at ufv dot br
 Based on: https://towardsdatascience.com/beginners-guide-to-custom-environments-in-openai-s-gym-989371673952
+
+ python3 teste.py --gamma 0.7 --env "gym_basic:basic-v1" --n-episode 2000 --batch-size 2 --hidden-dim 12 --capacity 1000 --max-episode 50 --min-eps 0.01
+
+
 '''
 
 from __future__ import division
@@ -72,13 +76,13 @@ class BasicEnv(gym.Env):
 
     def step(self, action):
         print("\nStep Action Required: "+str(action))
-        self.state = self.main(1 if action == 0 else action, 3330, 'wlp3s0')#1 if rando return 0, else action otherwise
+        self.state = self.main(1 if action == 0 else action, 777, 'veth0b')#1 if rando return 0, else action otherwise
         print("\nNew State after pooling: "+str(self.state))
         self.pooling_times -= 1
 
         print("pooling times: "+str(self.pooling_times))
 
-        if self.state >= 93:#If IoT sampling is bigger than 90% that is correct
+        if self.state >= 1.9:#If IoT sampling is bigger than 90% that is correct
             reward = 1
         else:
             reward = -1
@@ -308,7 +312,7 @@ class BasicEnv(gym.Env):
             if x.endswith(".png"):
                 # cmd = 'python3 load_example.py '+str(x)
                 returned_value = self.cnn_predict(x)
-                if returned_value == 'iot':
+                if not returned_value == 'iot':
                     current_network_status = current_network_status + 1
 
         cmd = 'sudo rm /home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/*.png'
