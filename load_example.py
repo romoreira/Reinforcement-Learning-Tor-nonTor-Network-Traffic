@@ -20,7 +20,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 time_list = []
 
-know_classes = ['bittorrent', 'browsing','dns', 'iot', 'rdp', 'ssh','voip']
+know_classes = ['NonTor', 'Tor']
 
 def initialize_model(model_name, num_classes, feature_extract, use_pretrained=True):
     # Inicializando cada variável específica para cada modelo
@@ -72,7 +72,7 @@ def cnn_start():
     model = 0
     input_size = 0
     model_name = "squeezenet"
-    model, input_size = initialize_model(model_name, num_classes=7, feature_extract=True, use_pretrained=True)
+    model, input_size = initialize_model(model_name, num_classes=2, feature_extract=True, use_pretrained=True)
 
     checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'))
     model.load_state_dict(checkpoint)

@@ -339,7 +339,7 @@ def main():
     try:
         env = gym.make(FLAGS.env)
 #        env = gym.wrappers.Monitor(env, directory="monitors", force=True)
-        rewards = deque(maxlen=30)
+        rewards = deque(maxlen=15)
         input_dim, output_dim = get_env_dim(env)
         agent = Agent(input_dim, output_dim, FLAGS.hidden_dim)
         replay_memory = ReplayMemory(FLAGS.capacity)
@@ -379,14 +379,14 @@ def main():
     plt.title('Training Loss and Reward')
     plt.xlabel('Episodes')
     plt.ylabel('Loss')
-    plt.savefig('train_loss.png')
+    plt.savefig('train_loss.pdf')
 
     plt.clf()
 
     plt.plot(episodes, recompensas, 'b', label='Reward')
     plt.xlabel('Episodes')
     plt.ylabel('Rewards')
-    plt.savefig('train_rewards.png')
+    plt.savefig('train_rewards.pdf')
 
 if __name__ == '__main__':
     main()

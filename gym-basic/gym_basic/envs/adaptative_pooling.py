@@ -56,7 +56,7 @@ torch.cuda.manual_seed(SEED)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # print("CPU-based classification")
 time_list = []
-know_classes = ['bittorrent', 'browsing', 'dns', 'iot', 'rdp', 'ssh', 'voip']
+know_classes = ['NonTor', 'Tor']
 import sys
 import numpy as np
 import pandas as pd
@@ -82,7 +82,7 @@ class BasicEnv(gym.Env):
 
         print("pooling times: "+str(self.pooling_times))
 
-        if self.state >= 1.9:#If IoT sampling is bigger than 90% that is correct
+        if self.state >= 96:#If Tor sampling is bigger than 45% that is correct
             reward = 1
         else:
             reward = -1
@@ -244,7 +244,7 @@ class BasicEnv(gym.Env):
     def cnn_start(self):
         input_size = 0
         model_name = "squeezenet"
-        self.model, input_size = self.initialize_model(model_name, 7, True, True)
+        self.model, input_size = self.initialize_model(model_name, 2, True, True)
 
         checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'))
         self.model.load_state_dict(checkpoint)
@@ -312,7 +312,7 @@ class BasicEnv(gym.Env):
             if x.endswith(".png"):
                 # cmd = 'python3 load_example.py '+str(x)
                 returned_value = self.cnn_predict(x)
-                if not returned_value == 'iot':
+                if not returned_value == 'Tor':#If current traffic is TOR
                     current_network_status = current_network_status + 1
 
         cmd = 'sudo rm /home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/*.png'

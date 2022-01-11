@@ -33,7 +33,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 time_list = []
 
-know_classes = ['bittorrent', 'browsing', 'dns', 'iot', 'rdp', 'ssh', 'voip']
+know_classes = ['NonTor', 'Tor']
 
 import sys
 import numpy as np
@@ -197,10 +197,12 @@ def cnn_start():
     model = 0
     input_size = 0
     model_name = "squeezenet"
-    model, input_size = initialize_model(model_name, num_classes=7, feature_extract=True, use_pretrained=True)
+    model, input_size = initialize_model(model_name, num_classes=2, feature_extract=True, use_pretrained=True)
 
-    checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'),
-                            map_location='cpu')
+    #checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'),
+    #                        map_location='cpu')
+    checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'))
+
     model.load_state_dict(checkpoint)
     model.eval()
 
@@ -282,9 +284,11 @@ def main(pkt_amount, duration, interface_name):
 if __name__ == "__main__":
    #runner(int(sys.argv[1]), sys.argv[2], sys.argv[3])
    #for i in range(int(sys.argv[1])):
-   #packets = PcapReader('./IoT.pcap')
+   #print("Starting algorith")
+   #packets = PcapReader('./torNonTor.pcapng')
    #    packets = rdpcap('./IoT.pcap')
 
+   #print("Running Packet Vision")
    #i = 0
    #for packet in packets:
    # cmd = "python3 packetVision.py '"+str(linehexdump(packet, onlyhex=1, dump=True))+"' "+str(calendar.timegm(time.gmtime()))+" "+str(i)
@@ -292,7 +296,7 @@ if __name__ == "__main__":
    # i = i + 1
    #cmd = 'sudo rm /tmp/output.pcap'
    #os.system(cmd)
-   print("End of pooling")
+   #print("End of pooling")
 
     
    path, dirs, files = next(os.walk("/home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/"))
@@ -301,9 +305,9 @@ if __name__ == "__main__":
        if x.endswith(".png"):
            #cmd = 'python3 load_example.py '+str(x)
            returned_value = cnn_predict(x)
-           if returned_value == 'iot':
+           if returned_value == 'Tor':
                current_network_status = current_network_status + 1
 
-   print("IoT Traffic Percent on the Network: "+str("{0:.0f}%".format(current_network_status/len(files) * 100)))
+   print("Tor Traffic Percent on the Network: "+str("{0:.0f}%".format(current_network_status/len(files) * 100)))
     
 
