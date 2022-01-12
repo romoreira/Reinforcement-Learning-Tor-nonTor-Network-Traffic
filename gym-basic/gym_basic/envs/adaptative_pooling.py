@@ -74,13 +74,13 @@ class BasicEnv(gym.Env):
         self.model = self.cnn_start()
 
     def step(self, action):
-        print("\nStep Action Required: "+str(action))
+        #print("\nStep Action Required: "+str(action))
         self.state = self.main(1 if action == 0 else action, 777, 'veth0b')#1 if rando return 0, else action otherwise
-        print("\nNew State after pooling: "+str(self.state))
-        print("pooling times: "+str(self.pooling_times))
+        #print("\nNew State after pooling: "+str(self.state))
+        #print("pooling times: "+str(self.pooling_times))
         self.pooling_times = self.pooling_times - 1
 
-        if self.state >= 96:#If Tor sampling is bigger than 45% that is correct
+        if self.state >= 50:
             reward = 1
         else:
             reward = -1
@@ -294,6 +294,7 @@ class BasicEnv(gym.Env):
 
     def main(self, pkt_amount, duration, interface_name):
         current_network_status = 0
+        packets = []
         self.runner(int(pkt_amount), int(duration), interface_name)
         packets = PcapReader('/tmp/output.pcap').read_all()
 
@@ -303,7 +304,7 @@ class BasicEnv(gym.Env):
         cmd = 'sudo rm /tmp/output.pcap'
         os.system(cmd)
 
-        print("End of pooling")
+        #print("End of pooling")
 
         path, dirs, files = next(os.walk("/home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/"))
         returned_value = ''
@@ -311,9 +312,10 @@ class BasicEnv(gym.Env):
             if x.endswith(".png"):
                 # cmd = 'python3 load_example.py '+str(x)
                 returned_value = self.cnn_predict(x)
-                if not returned_value == 'Tor':#If current traffic is TOR
+                #print("Predicted value: "+str(returned_value))
+                if  returned_value == "Tor":#If current traffic is nonTOR
                     current_network_status = current_network_status + 1
-
+        #Tor Traffic Percent on the Network: 59%
         cmd = 'sudo rm /home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/*.png'
         os.system(cmd)
 

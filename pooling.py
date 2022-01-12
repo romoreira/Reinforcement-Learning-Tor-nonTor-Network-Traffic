@@ -234,7 +234,7 @@ def cnn_predict(image_name):
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
 
-    path = Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/' + str(image_name))
+    path = Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/bkp_tor/' + str(image_name))
 
     image = Image.open(path)
 
@@ -285,8 +285,8 @@ if __name__ == "__main__":
    #runner(int(sys.argv[1]), sys.argv[2], sys.argv[3])
    #for i in range(int(sys.argv[1])):
    #print("Starting algorith")
-   #packets = PcapReader('./torNonTor.pcapng')
-   #    packets = rdpcap('./IoT.pcap')
+   #packets = PcapReader('./TorNonTor_Final.pcap')
+   #packets = rdpcap('./IoT.pcap')
 
    #print("Running Packet Vision")
    #i = 0
@@ -299,15 +299,19 @@ if __name__ == "__main__":
    #print("End of pooling")
 
     
-   path, dirs, files = next(os.walk("/home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/"))
+   path, dirs, files = next(os.walk("/home/rodrigo/PycharmProjects/adaptative-monitoring/bkp_tor/"))
    returned_value = ''
-   for x in os.listdir("/home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/"):
+   for x in os.listdir("/home/rodrigo/PycharmProjects/adaptative-monitoring/bkp_tor/"):
        if x.endswith(".png"):
            #cmd = 'python3 load_example.py '+str(x)
            returned_value = cnn_predict(x)
+           print(returned_value)
            if returned_value == 'Tor':
+               print("Predicted TOR")
                current_network_status = current_network_status + 1
-
+           else:
+               print("Predicted nonTOR")
+    #Tor Traffic Percent on the Network: 59%
    print("Tor Traffic Percent on the Network: "+str("{0:.0f}%".format(current_network_status/len(files) * 100)))
     
 

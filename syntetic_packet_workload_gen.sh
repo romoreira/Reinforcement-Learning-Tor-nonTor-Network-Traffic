@@ -6,7 +6,7 @@ sudo ifconfig veth0a 10.0.0.1 netmask 255.255.255.0
 sudo ifconfig veth0b 10.0.0.2 netmask 255.255.255.0
 while true
 do
-	sudo tcpreplay -i veth0b -t -l $[ ( $RANDOM % 10 ) + 1 ] --preload-pcap torNonTor.pcap
+	sudo tcpreplay -i veth0b -tK -l $[ ( $RANDOM % 100 ) + 1 ] --unique-ip TorNonTor_Final.pcap
 	sleep $[ ( $RANDOM % 2 ) + 1 ]s
 done
 
