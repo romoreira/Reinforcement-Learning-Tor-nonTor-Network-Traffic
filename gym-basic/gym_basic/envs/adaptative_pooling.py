@@ -66,30 +66,28 @@ from PIL import Image
 class BasicEnv(gym.Env):
 
     def __init__(self):
-        #print("Creating environment Adaptative Sampling")
         self.action_space = Discrete(100, 1)
         self.observation_space = Box(low=np.array([0]), high=np.array([100]))
         self.state = 3 + random.randint(-3,3)
         #print("\ninit: "+str(self.state)+"\n")
-        self.pooling_times = 4
+        self.pooling_times = 5
         self.model = self.cnn_start()
 
     def step(self, action):
         print("\nStep Action Required: "+str(action))
         self.state = self.main(1 if action == 0 else action, 777, 'veth0b')#1 if rando return 0, else action otherwise
         print("\nNew State after pooling: "+str(self.state))
-        self.pooling_times -= 1
-
         print("pooling times: "+str(self.pooling_times))
+        self.pooling_times = self.pooling_times - 1
 
         if self.state >= 96:#If Tor sampling is bigger than 45% that is correct
             reward = 1
         else:
             reward = -1
 
-        if self.pooling_times <= 0:
+        if self.pooling_times == 0:
             done = True
-            self.pooling_times = 4
+            self.pooling_times = 5
         else:
             done = False
 
@@ -99,7 +97,7 @@ class BasicEnv(gym.Env):
 
     def reset(self):
         self.state = 3 + random.randint(-3,3)
-        self.pooling_times = 4
+        self.pooling_times = 5
         return self.state
 
     def render(slef, mode='human'):
@@ -109,6 +107,7 @@ class BasicEnv(gym.Env):
             plt.axis('off')
         elif mode == 'rgb_array':
             return np.asarray(im)
+
 
 
 

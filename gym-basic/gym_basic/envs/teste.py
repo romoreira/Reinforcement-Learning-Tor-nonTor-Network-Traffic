@@ -16,6 +16,7 @@ from collections import deque
 from typing import List, Tuple
 import matplotlib
 import matplotlib.pyplot as plt
+from csv import writer
 
 # set up matplotlib
 is_ipython = 'inline' in matplotlib.get_backend()
@@ -332,20 +333,35 @@ def epsilon_annealing(epsiode: int, max_episode: int, min_eps: float) -> float:
     slope = (min_eps - 1.0) / max_episode
     return max(slope * epsiode + 1.0, min_eps)
 
+def csv_writter(register):
+    with open('adaptative_pooling_results.csv', 'a') as f:
+        writer_object = writer(f)
+        writer_object.writerow(register)
+        f.close()
+
+def csv_creator():
+    List_Exp = ['episode_number', 'train_reward', 'train_loss', 'rewards_avg']
+    with open('adaptative_pooling_results.csv', 'w') as f:
+        writer_object = writer(f)
+        writer_object.writerow(List_Exp)
+        f.close()
 
 def main():
     """Main
     """
+    csv_creator()
+
     try:
         env = gym.make(FLAGS.env)
 #        env = gym.wrappers.Monitor(env, directory="monitors", force=True)
-        rewards = deque(maxlen=15)
+        rewards = deque(maxlen=10)
         input_dim, output_dim = get_env_dim(env)
         agent = Agent(input_dim, output_dim, FLAGS.hidden_dim)
         replay_memory = ReplayMemory(FLAGS.capacity)
 
         loss_history = []
         episodes = []
+        registro_csv = []
         recompensas = []
         
         for i in range(FLAGS.n_episode):
@@ -358,9 +374,16 @@ def main():
             episodes.append(i)
             recompensas.append(r)
 
+            registro_csv.append(str(i))
+            registro_csv.append(r)
+            registro_csv.append(loss.item())
+            registro_csv.append(np.mean(rewards))
+            csv_writter(registro_csv)
+            registro_csv = []
+
             print("Media Rewards: "+str(np.mean(rewards)))
             if len(rewards) == rewards.maxlen:
-                if np.mean(rewards) >= 3.9:
+                if np.mean(rewards) >= 4.9:
                     print("Game cleared in {} games with {}".format(i + 1, np.mean(rewards)))
                     break
         
