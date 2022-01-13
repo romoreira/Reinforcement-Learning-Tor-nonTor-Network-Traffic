@@ -334,14 +334,14 @@ def epsilon_annealing(epsiode: int, max_episode: int, min_eps: float) -> float:
     return max(slope * epsiode + 1.0, min_eps)
 
 def csv_writter(register):
-    with open('adaptative_pooling_results.csv', 'a') as f:
+    with open('adaptative_pooling_results_random.csv', 'a') as f:
         writer_object = writer(f)
         writer_object.writerow(register)
         f.close()
 
 def csv_creator():
     List_Exp = ['episode_number', 'train_reward', 'train_loss', 'rewards_avg']
-    with open('adaptative_pooling_results.csv', 'w') as f:
+    with open('adaptative_pooling_results_random.csv', 'w') as f:
         writer_object = writer(f)
         writer_object.writerow(List_Exp)
         f.close()
@@ -383,7 +383,7 @@ def main():
 
             print("Media Rewards: "+str(np.mean(rewards)))
             if len(rewards) == rewards.maxlen:
-                if np.mean(rewards) >= 4.9:
+                if np.mean(rewards) >= 1.9:
                     print("Game cleared in {} games with {}".format(i + 1, np.mean(rewards)))
                     break
         

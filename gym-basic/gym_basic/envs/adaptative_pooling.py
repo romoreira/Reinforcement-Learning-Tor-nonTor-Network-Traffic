@@ -66,28 +66,29 @@ from PIL import Image
 class BasicEnv(gym.Env):
 
     def __init__(self):
-        self.action_space = Discrete(100, 1)
+        self.action_space = Discrete(500, 1)
         self.observation_space = Box(low=np.array([0]), high=np.array([100]))
         self.state = 3 + random.randint(-3,3)
         #print("\ninit: "+str(self.state)+"\n")
-        self.pooling_times = 5
+        self.pooling_times = 2
         self.model = self.cnn_start()
 
     def step(self, action):
         #print("\nStep Action Required: "+str(action))
         self.state = self.main(1 if action == 0 else action, 777, 'veth0b')#1 if rando return 0, else action otherwise
+        #self.state = self.main(1 if action == 0 else action, 777, 'veth0b')
         #print("\nNew State after pooling: "+str(self.state))
         #print("pooling times: "+str(self.pooling_times))
         self.pooling_times = self.pooling_times - 1
 
-        if self.state >= 50:
+        if self.state >= 90:
             reward = 1
         else:
             reward = -1
 
         if self.pooling_times == 0:
             done = True
-            self.pooling_times = 5
+            self.pooling_times = 2
         else:
             done = False
 
@@ -97,7 +98,7 @@ class BasicEnv(gym.Env):
 
     def reset(self):
         self.state = 3 + random.randint(-3,3)
-        self.pooling_times = 5
+        self.pooling_times = 2
         return self.state
 
     def render(slef, mode='human'):
@@ -313,7 +314,7 @@ class BasicEnv(gym.Env):
                 # cmd = 'python3 load_example.py '+str(x)
                 returned_value = self.cnn_predict(x)
                 #print("Predicted value: "+str(returned_value))
-                if  returned_value == "Tor":#If current traffic is nonTOR
+                if not returned_value == "Tor":#If current traffic is nonTOR
                     current_network_status = current_network_status + 1
         #Tor Traffic Percent on the Network: 59%
         cmd = 'sudo rm /home/rodrigo/PycharmProjects/adaptative-monitoring/tmp_pooling/*.png'
