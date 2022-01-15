@@ -9,6 +9,10 @@ import calendar
 import time
 import subprocess
 from load_example import cnn_predict
+from timeit import default_timer as timer
+
+from prediction_time import create_csv
+from prediction_time import write_csv
 
 current_network_status = 0
 
@@ -180,6 +184,16 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
         model_ft.classifier[6] = nn.Linear(num_ftrs, num_classes)
         input_size = 224
 
+    elif model_name == "densenet":
+        """ Densenet
+        """
+        model_ft = models.densenet169(pretrained=use_pretrained)
+        # model_ft = models.densenet201(pretrained=use_pretrained)
+        set_parameter_requires_grad(model_ft, feature_extract)
+        num_ftrs = model_ft.classifier.in_features
+        model_ft.classifier = nn.Linear(num_ftrs, num_classes)
+        input_size = 224
+
     else:
         print("Invalid model name, exiting...")
         exit()
@@ -201,7 +215,7 @@ def cnn_start():
 
     #checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'),
     #                        map_location='cpu')
-    checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'))
+    checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet-packetvision.pth'))
 
     model.load_state_dict(checkpoint)
     model.eval()
@@ -217,16 +231,15 @@ def get_cnn_complexity(model):
     print('{:<30}  {:<8}'.format('Number of parameters: ', params))
 
 
-def write_csv(register):
-    with open(str(sys.argv[2]) + '_exp_time_spent_on_prediction.csv', 'a') as f:
+def write_csv(cnn, register):
+    with open(str(cnn) + '_exp_time_spent_on_prediction.csv', 'a') as f:
         writer_object = writer(f)
         writer_object.writerow(register)
         f.close()
         # print("Prediction time recorded")
 
 
-def cnn_predict(image_name):
-    model = cnn_start()
+def cnn_predict(image_name, model):
 
     test_transforms = transforms.Compose([
         transforms.Resize(size=[224, 224]),
@@ -241,12 +254,14 @@ def cnn_predict(image_name):
     input = test_transforms(image)
     input = torch.unsqueeze(input, 0)
 
+    start = timer()
     output = model(input)
+    end = timer()
 
     prediction = output.max(1, keepdim=True)[1]
 
     # print("Prediction: "+str(know_classes[int(prediction.item())]))
-    return know_classes[int(prediction.item())]
+    return start, end, know_classes[int(prediction.item())]
 
 
 
@@ -298,20 +313,39 @@ if __name__ == "__main__":
    #os.system(cmd)
    #print("End of pooling")
 
-    
+   print("Running from main")
    path, dirs, files = next(os.walk("/home/rodrigo/PycharmProjects/adaptative-monitoring/bkp_tor/"))
    returned_value = ''
+
+   model = cnn_start()
+   create_csv("squeezenet")
+   start_time = 0
+   end_time = 0
+   register = []
+
    for x in os.listdir("/home/rodrigo/PycharmProjects/adaptative-monitoring/bkp_tor/"):
        if x.endswith(".png"):
            #cmd = 'python3 load_example.py '+str(x)
-           returned_value = cnn_predict(x)
-           print(returned_value)
+           start, end, returned_value = cnn_predict(x, model)
+           register.append(start)
+           register.append(end)
+           register.append(end - start)
+           register.append(returned_value)
+           register.append(x)
+           #print(returned_value)
            if returned_value == 'Tor':
-               print("Predicted TOR")
+               #print("Predicted TOR")
                current_network_status = current_network_status + 1
-           else:
-               print("Predicted nonTOR")
+           #else:
+           #    print("Predicted nonTOR")
+
+           write_csv("squeezenet", register)
+           start_time = 0
+           end_time = 0
+           register = []
+
+
     #Tor Traffic Percent on the Network: 59%
    print("Tor Traffic Percent on the Network: "+str("{0:.0f}%".format(current_network_status/len(files) * 100)))
-    
+
 

@@ -71,10 +71,10 @@ def set_parameter_requires_grad(model, feature_extracting):
 def cnn_start():
     model = 0
     input_size = 0
-    model_name = "squeezenet"
+    model_name = "densenet"
     model, input_size = initialize_model(model_name, num_classes=2, feature_extract=True, use_pretrained=True)
 
-    checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'))
+    checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/densenet-packetvision.pth'))
     model.load_state_dict(checkpoint)
     model.eval()
 
