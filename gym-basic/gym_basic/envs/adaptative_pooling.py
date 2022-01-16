@@ -66,7 +66,7 @@ from PIL import Image
 class BasicEnv(gym.Env):
 
     def __init__(self):
-        self.action_space = Discrete(500, 1)
+        self.action_space = Discrete(100, 1)
         self.observation_space = Box(low=np.array([0]), high=np.array([100]))
         self.state = 3 + random.randint(-3,3)
         #print("\ninit: "+str(self.state)+"\n")
@@ -246,7 +246,7 @@ class BasicEnv(gym.Env):
         model_name = "squeezenet"
         self.model, input_size = self.initialize_model(model_name, 2, True, True)
 
-        checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet.pth'))
+        checkpoint = torch.load(Path('/home/rodrigo/PycharmProjects/adaptative-monitoring/models_trained/squeezenet-packetvision.pth'))
         self.model.load_state_dict(checkpoint)
         self.model.eval()
 
