@@ -55,6 +55,6 @@ Where first parameter refers to amount of packet capture, second refers to time 
 
 
 
-Finnaly, rum
+#### Finnaly, run:
 
-{}
+     python3 teste.py --gamma 0.9 --env "gym_basic:basic-v1" --n-episode 200 --batch-size 1 --hidden-dim 12 --capacity 1000 --max-episode 50 --min-eps 0.01
