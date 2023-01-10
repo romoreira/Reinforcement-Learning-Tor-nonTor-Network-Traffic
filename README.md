@@ -1,11 +1,11 @@
-# Adaptative Monitoring for Online Prediction of Tor/nonTor Traffic in vivo.
+# Adaptative Monitoring for Online Prediction of Tor/nonTor Traffic near to real time.
 ### Requirements:
 
 * ```conda create --name rl-cnn python=3.7 --file requirements.txt```
 * ```conda activate rl-cnn```
 * ```sudo apt-get install libopenmpi-dev```
 * ```cd gym-basic```
-* ```python setup.py install```
+* ```python setup.py install``` You should proceed with this steps in each machine where you want to run. To register the environment.
 * ```sudo apt-get install python3-scapy```
 
 ### Interface pooling test:
