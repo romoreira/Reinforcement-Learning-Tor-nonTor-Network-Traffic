@@ -1,4 +1,4 @@
-# Adaptive Network Monitoring for Online Classification of Tor/nonTor Traffic near to real-time.
+# Adaptive Network Monitoring for Online Classification of Tor/*non*Tor Traffic near to real-time.
 ### Requirements:
 
 * ```conda create --name rl-cnn python=3.7 --file requirements.txt```
