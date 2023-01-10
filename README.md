@@ -13,6 +13,9 @@ The dataset was build from CiC Univsersity of New Brunswich (Canadian) (https://
 This dataset contains all non-Tor classes such as audio, browsing, chat, email, p2p, transfer, video and voip. We merge all data in a single dataset named non-Tor. 
 After, we used ISCXTor2016 as a Tor Traffic. 
 
+### Run syntetic traffic generator based on Tor/*non*Tor Dataset
+    syntetic_packet_workload_gen.sh
+
 ### Interface pooling test:
 
     sudo python3 pooling.py 1 1 eth0
