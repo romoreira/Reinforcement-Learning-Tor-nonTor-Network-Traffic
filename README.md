@@ -11,9 +11,9 @@
 
 ### Interface pooling test:
 
-    sudo python3 pooling.py 1 1 eth0 
+    sudo python3 pooling.py 1 1 eth0
 Where first parameter refers to amount of packet capture, second refers to time of capture and last one refers to interface to be monitored.
-
+```Note that pooling command should run as root. Hence, install torch as root.```
 
 ### Finnaly, run: :on:
 
