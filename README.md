@@ -9,7 +9,7 @@
 * ```python setup.py install``` You should proceed with this steps in each machine where you want to run. To register the environment.
 
 ### :arrow_right: Need to run dataset traffic before any task.
-The dataset was build from CiC Univsersity of New Brunswich (Canadian) available (here)[https://www.unb.ca/cic/datasets/index.html].
+The dataset was build from CiC Univsersity of New Brunswich (Canadian) available [here](https://www.unb.ca/cic/datasets/index.html).
 This dataset contains all *non*-Tor classes such as audio, browsing, chat, email, p2p, transfer, video and voip. We merged all data of these classes in a single dataset named *non*-Tor.pcap. 
 After, we used ISCXTor2016 as a Tor Traffic. 
 
