@@ -1,7 +1,7 @@
 from __future__ import division
 import os
 import sys
-from scapy.all import *
+from scapy import *
 from scapy.all import bytes_hex
 from scapy.all import raw
 from scapy.all import hexdump

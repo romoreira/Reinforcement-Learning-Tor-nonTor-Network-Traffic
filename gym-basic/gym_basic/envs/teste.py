@@ -192,7 +192,7 @@ class Agent(object):
             #print(str("np.random.rand() < eps: "+str(np.random.choice(self.output_dim))))
             return np.random.choice(self.output_dim)
         else:
-            print("Retornando argmax.numpy()")
+            #print("Retornando argmax.numpy()")
             self.dqn.train(mode=False)
             #print("States: "+str(np.array([states])))
             scores = self.get_Q(np.array([states]))
@@ -273,6 +273,7 @@ def play_episode(env: gym.Env,
     s = env.reset()
     done = False
     total_reward = 0
+    loss = 0
 
     while not done:
 
@@ -350,7 +351,6 @@ def main():
     """Main
     """
     csv_creator()
-
     try:
         env = gym.make(FLAGS.env)
 #        env = gym.wrappers.Monitor(env, directory="monitors", force=True)

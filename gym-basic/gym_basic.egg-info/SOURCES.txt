@@ -1,7 +1,15 @@
 README.md
 setup.py
+gym_basic/__init__.py
 gym_basic.egg-info/PKG-INFO
 gym_basic.egg-info/SOURCES.txt
 gym_basic.egg-info/dependency_links.txt
 gym_basic.egg-info/requires.txt
 gym_basic.egg-info/top_level.txt
+gym_basic/envs/__init__.py
+gym_basic/envs/agent.py
+gym_basic/envs/basic_env.py
+gym_basic/envs/driver.py
+gym_basic/envs/numba_functions.py
+gym_basic/envs/qnn.py
+gym_basic/envs/teste.py
