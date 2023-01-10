@@ -20,7 +20,7 @@ After, we used ISCXTor2016 as a Tor Traffic.
 
     sudo python3 pooling.py 1 1 eth0
 Where first parameter refers to amount of packet capture, second refers to time of capture and last one refers to interface to be monitored.
-```Note that pooling command should run as root. Hence, install torch as root.```
+```Note that pooling command should run as root. Hence, install torch and its dependences as root accordingly```
 
 ### :arrow_right: Finnaly, run: :on:
 
