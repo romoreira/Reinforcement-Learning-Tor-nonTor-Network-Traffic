@@ -10,7 +10,7 @@
 
 ### :arrow_right: Need to run dataset traffic before any task.
 The dataset was build from CiC Univsersity of New Brunswich (Canadian) (https://www.unb.ca/cic/datasets/index.html)[here].
-This dataset contains all non-Tor classes such as audio, browsing, chat, email, p2p, transfer, video and voip. We merge all data in a single dataset named non-Tor. 
+This dataset contains all *non*-Tor classes such as audio, browsing, chat, email, p2p, transfer, video and voip. We merge all data in a single dataset named *non*-Tor. 
 After, we used ISCXTor2016 as a Tor Traffic. 
 
 #### Run syntetic Traffic generator based on Tor/*non*Tor Dataset
